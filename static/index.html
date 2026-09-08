@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kivi -- The Words Kivi Keeps</title>
+<style>
+  :root {
+    --bg:#0f1117; --panel:#171a23; --panel2:#1e2230; --line:#2a2f40;
+    --text:#e8eaf0; --muted:#9aa0b4; --accent:#7c6cf0; --teal:#4ecdc4;
+    --good:#3ecf6e; --warn:#e0b45c; --bad:#e05c5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--text);padding:28px 24px;max-width:1240px;margin:0 auto}
+  h1{font-size:22px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);font-size:13px;margin:6px 0 22px;line-height:1.5}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .panel h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);
+            margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+  .panel h2 small{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px}
+  label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}
+  textarea,input,select{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);
+       border-radius:9px;padding:10px 12px;font-size:14px;font-family:inherit}
+  textarea{min-height:58px;resize:vertical;line-height:1.4}
+  textarea.tall{min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+  button{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 16px;
+         font-size:14px;font-weight:600;cursor:pointer;margin-top:14px;width:100%}
+  button:hover{filter:brightness(1.12)}
+  button.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  button.ghost:hover{color:var(--text);border-color:var(--muted)}
+  button.small{width:auto;padding:5px 10px;margin:0;font-size:12px;font-weight:500}
+  button.danger{background:transparent;color:var(--bad);border:1px solid var(--line)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .out{margin-top:16px;padding:14px;background:var(--panel2);border-radius:9px;
+       border-left:3px solid var(--teal);font-size:14px;line-height:1.55;min-height:48px}
+  .out .rw{background:rgba(62,207,110,.16);color:var(--good);padding:1px 4px;border-radius:4px;
+       border-bottom:1px dashed var(--good);cursor:help;font-weight:500}
+  .out .ab{background:rgba(224,180,92,.14);color:var(--warn);padding:1px 4px;border-radius:4px;
+       border-bottom:1px dashed var(--warn);cursor:help}
+  .word{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+        padding:12px 14px;background:var(--panel2);border-radius:9px;margin-top:10px;
+        border-left:3px solid transparent}
+  .word.confirmed{border-left-color:var(--good)}
+  .word.candidate{border-left-color:var(--warn)}
+  .word.needs_review{border-left-color:var(--bad)}
+  .word.suppressed{border-left-color:var(--muted);opacity:.7}
+  .wleft{flex:1;min-width:0}
+  .wtitle{font-weight:600;font-size:14px}
+  .wtitle .arrow{color:var(--muted);margin:0 6px;font-weight:400}
+  .wmeta{color:var(--muted);font-size:11.5px;margin-top:4px;line-height:1.5}
+  .wmeta code{background:var(--panel);padding:1px 5px;border-radius:3px;font-size:11px}
+  .wactions{display:flex;gap:6px;flex-shrink:0}
+  .pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;
+        background:var(--panel);color:var(--muted);border:1px solid var(--line);
+        text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .pill.confirmed{color:var(--good);border-color:var(--good)}
+  .pill.candidate{color:var(--warn);border-color:var(--warn)}
+  .pill.needs_review{color:var(--bad);border-color:var(--bad)}
+  .pill.suppressed{color:var(--muted)}
+  .events{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
+          max-height:280px;overflow-y:auto;background:var(--panel2);padding:10px;border-radius:9px;margin-top:6px}
+  .events div{padding:3px 0;color:var(--muted);border-bottom:1px solid var(--line)}
+  .events b{color:var(--text)}
+  .decision{padding:8px 10px;background:var(--panel2);border-radius:6px;margin-top:6px;
+            font-size:12.5px;line-height:1.5;border-left:3px solid var(--line)}
+  .decision.rewrite{border-left-color:var(--good)}
+  .decision.abstain{border-left-color:var(--warn)}
+  .decision code{background:var(--panel);padding:1px 5px;border-radius:3px}
+  .meter{color:var(--muted);font-size:11.5px;margin-top:12px}
+  .split{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .toast{position:fixed;top:14px;right:14px;background:var(--panel);border:1px solid var(--line);
+         padding:10px 14px;border-radius:9px;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.4);
+         opacity:0;transform:translateX(20px);transition:.25s;z-index:99}
+  .toast.show{opacity:1;transform:translateX(0)}
+  .toast.err{border-color:var(--bad);color:var(--bad)}
+  details{margin-top:10px}
+  details summary{cursor:pointer;color:var(--muted);font-size:12px;padding:4px 0}
+  details summary:hover{color:var(--text)}
+  .empty{color:var(--muted);font-size:13px;padding:20px 0;text-align:center;font-style:italic}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+</style>
+</head>
+<body>
+
+<h1>The Words <span>Kivi</span> Keeps</h1>
+<div class="sub">
+  A word-level phonetic memory. Teach Kivi how <em>you</em> spell names, brands and terms;
+  it rewrites new transcripts to match, and deliberately abstains when the evidence is weak,
+  wrong, or silenced. Every decision is inspectable.
+</div>
+
+<div class="grid">
+
+  <!-- ============================ REWRITE PANEL ============================ -->
+  <div class="panel">
+    <h2>Rewrite <small>Formatted -> memory-aware</small></h2>
+
+    <label>ASR raw (optional)</label>
+    <textarea id="asr" placeholder="ask aditya to review the sarvam kiwi service">ask aditya to review the sarvam kiwi service</textarea>
+
+    <label>Formatted (input)</label>
+    <textarea id="formatted" placeholder="Ask Aditya to review the Sarvam Kiwi service.">Ask Aditya to review the Sarvam Kiwi service.</textarea>
+
+    <button onclick="doRewrite()">Rewrite with memory</button>
+
+    <label style="margin-top:18px">Memory-aware output</label>
+    <div id="output" class="out"><em style="color:var(--muted)">Press "Rewrite with memory".</em></div>
+    <div id="latency" class="meter"></div>
+
+    <label style="margin-top:14px">Decisions</label>
+    <div id="decisions"><div class="empty">No decisions yet.</div></div>
+  </div>
+
+  <!-- ============================ TEACH PANEL ============================ -->
+  <div class="panel">
+    <h2>Teach <small>Feed observations</small></h2>
+
+    <div class="row">
+      <div>
+        <label>Kind</label>
+        <select id="kind">
+          <option value="correction">correction  (user fixes span)</option>
+          <option value="confirm">confirm  (user approves span)</option>
+          <option value="edit">edit  (user changes span)</option>
+          <option value="delete">delete  (forget word)</option>
+        </select>
+      </div>
+      <div>
+        <label>Weight</label>
+        <select id="weight">
+          <option value="1">1  (single sighting)</option>
+          <option value="2" selected>2  (confident correction)</option>
+        </select>
+      </div>
+    </div>
+
+    <label>ASR (context)</label>
+    <textarea id="tasr" placeholder="what the ASR gave">ask aditya to review the sarvam kiwi service</textarea>
+
+    <label>Formatted (context)</label>
+    <textarea id="tfmt" placeholder="what the LM formatted">Ask Aditya to review the Sarvam Kiwi service.</textarea>
+
+    <div class="row">
+      <div>
+        <label>Selection (span the user acts on)</label>
+        <input id="sel" placeholder="Kiwi" value="Kiwi">
+      </div>
+      <div>
+        <label>Replacement (their preferred spelling)</label>
+        <input id="rep" placeholder="Kivi" value="Kivi">
+      </div>
+    </div>
+
+    <button onclick="doObserve()">Teach Kivi</button>
+
+    <details>
+      <summary>Bulk import (JSONL)</summary>
+      <label style="margin-top:8px">Paste one JSON observation per line</label>
+      <textarea id="bulk" class="tall" placeholder='{"kind":"correction","asr":"...","formatted":"...","selection":"Kiwi","replacement":"Kivi","weight":2}
+{"kind":"correction","formatted":"...","selection":"Aditya","replacement":"Aaditya","weight":2}'></textarea>
+      <button onclick="doBulk()" class="ghost">Import all</button>
+    </details>
+
+    <div class="toolbar">
+      <button class="small ghost" onclick="loadSeed()">Load demo seeds</button>
+      <button class="small ghost" onclick="doSweep()">Sweep stale candidates</button>
+      <button class="small danger" onclick="doReset()">Reset memory</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ MEMORY PANEL ============================ -->
+<div class="panel" style="margin-top:18px">
+  <h2>Memory <small id="mstat"></small></h2>
+  <div id="memory"><div class="empty">Loading memory...</div></div>
+</div>
+
+<!-- ============================ EVENTS PANEL ============================ -->
+<div class="panel" style="margin-top:18px">
+  <h2>Recent events <small>append-only audit log</small></h2>
+  <div id="events" class="events"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let TOAST;
+
+function toast(msg, err=false) {
+  clearTimeout(TOAST);
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (err ? " err" : "");
+  TOAST = setTimeout(() => t.className = "toast", 2400);
+}
+
+async function api(method, path, body) {
+  const opt = { method, headers: {"Content-Type": "application/json"} };
+  if (body !== undefined) opt.body = JSON.stringify(body);
+  const r = await fetch(path, opt);
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || data.reason || "request failed");
+  return data;
+}
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// -- Rewrite ----------------------------------------------------------------
+async function doRewrite() {
+  const formatted = $("formatted").value;
+  const asr = $("asr").value;
+  try {
+    const r = await api("POST", "/api/rewrite", { formatted, asr });
+    renderRewrite(formatted, r);
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+function renderRewrite(input, result) {
+  // Build visual diff by walking the result text and inserting spans at each
+  // decision. Decisions have (start, end) referring to the INPUT; the output
+  // text has different offsets, so we render from decisions over the OUTPUT
+  // by simple string replacement of each original -> replacement, marked up.
+  //
+  // Simpler and robust: build spans from decisions against the ORIGINAL text
+  // (indexes are valid there), then substitute the resulting HTML into an
+  // output span whose plain-text equals result.text.
+  const decs = (result.decisions || []).slice().sort((a,b) => a.start - b.start);
+  let html = "";
+  let cursor = 0;
+  for (const d of decs) {
+    html += esc(input.slice(cursor, d.start));
+    const cls = d.action === "rewrite" ? "rw" : "ab";
+    const shown = d.action === "rewrite" ? d.replacement : d.original;
+    const tip = `${d.action}: ${d.reason}`;
+    html += `<span class="${cls}" title="${esc(tip)}">${esc(shown)}</span>`;
+    cursor = d.end;
+  }
+  html += esc(input.slice(cursor));
+  $("output").innerHTML = html || `<em style="color:var(--muted)">(empty)</em>`;
+
+  $("latency").textContent =
+    `latency ${result.latency_ms} ms | db ${(result.db_bytes/1024).toFixed(1)} KB | ` +
+    `${decs.length} decision${decs.length===1?"":"s"}`;
+
+  if (decs.length === 0) {
+    $("decisions").innerHTML = `<div class="empty">Nothing considered worth changing.</div>`;
+    return;
+  }
+  $("decisions").innerHTML = decs.map(d => `
+    <div class="decision ${esc(d.action)}">
+      <b>${esc(d.action)}</b>
+      <code>${esc(d.original)}</code>
+      ${d.replacement ? `-> <code>${esc(d.replacement)}</code>` : ""}
+      ${d.similarity != null ? `<span class="pill">sim ${d.similarity.toFixed(2)}</span>` : ""}
+      ${d.context_support != null && d.context_support > 0 ? `<span class="pill">ctx +${d.context_support.toFixed(2)}</span>` : ""}
+      <div style="color:var(--muted);margin-top:4px">${esc(d.reason)}</div>
+    </div>`).join("");
+}
+
+// -- Teach ------------------------------------------------------------------
+async function doObserve() {
+  const body = {
+    kind: $("kind").value,
+    asr: $("tasr").value,
+    formatted: $("tfmt").value,
+    selection: $("sel").value,
+    replacement: $("rep").value,
+    weight: Number($("weight").value),
+  };
+  try {
+    const r = await api("POST", "/api/observe", body);
+    if (r.accepted) toast(`Stored ${r.word} as ${r.status}${r.promoted?" (promoted!)":""}`);
+    else toast("Not accepted: " + r.reason, true);
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function doBulk() {
+  const raw = $("bulk").value.trim();
+  if (!raw) return toast("Bulk area is empty", true);
+  const lines = raw.split(/\n+/);
+  const obs = [];
+  for (const [i, l] of lines.entries()) {
+    if (!l.trim()) continue;
+    try { obs.push(JSON.parse(l)); }
+    catch { return toast(`Line ${i+1}: not valid JSON`, true); }
+  }
+  try {
+    const r = await api("POST", "/api/observe/bulk", { observations: obs });
+    const okN = r.results.filter(x => x.accepted).length;
+    toast(`Imported ${okN} / ${r.count} observations`);
+    $("bulk").value = "";
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function loadSeed() {
+  try {
+    const r = await api("POST", "/api/seed", {});
+    toast(`Seeded ${r.seeded} observations`);
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function doSweep() {
+  try {
+    const r = await api("POST", "/api/sweep", {});
+    toast(r.count ? `Swept ${r.count} stale candidate(s): ${r.removed.join(", ")}` : "No stale candidates");
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function doReset() {
+  if (!confirm("Erase all memory? This can't be undone.")) return;
+  try {
+    await api("POST", "/api/reset", { confirm: true });
+    toast("Memory reset");
+    $("output").innerHTML = `<em style="color:var(--muted)">Press "Rewrite with memory".</em>`;
+    $("decisions").innerHTML = `<div class="empty">No decisions yet.</div>`;
+    $("latency").textContent = "";
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function suppressWord(word) {
+  try {
+    await api("POST", "/api/suppress", { word });
+    toast(`Suppressed "${word}"`);
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+async function deleteWord(word) {
+  if (!confirm(`Forget "${word}" entirely?`)) return;
+  try {
+    await api("POST", "/api/delete", { word });
+    toast(`Deleted "${word}"`);
+    refresh();
+  } catch (e) { toast(e.message, true); }
+}
+
+// -- Refresh memory + events ----------------------------------------------
+async function refresh() {
+  try {
+    const mem = await api("GET", "/api/memory");
+    renderMemory(mem);
+    const ev = await api("GET", "/api/events?limit=40");
+    renderEvents(ev);
+  } catch (e) { /* silent -- server may be starting */ }
+}
+
+function renderMemory(mem) {
+  const words = mem.words || [];
+  const kb = (mem.db_bytes/1024).toFixed(1);
+  $("mstat").textContent = `${words.length} word${words.length===1?"":"s"} | user ${mem.user_id} | db ${kb} KB`;
+
+  if (words.length === 0) {
+    $("memory").innerHTML = `<div class="empty">No memory yet. Teach Kivi something, or load the demo seeds.</div>`;
+    return;
+  }
+  // Group by status for readability.
+  const order = ["confirmed", "candidate", "needs_review", "suppressed"];
+  words.sort((a,b) => order.indexOf(a.status) - order.indexOf(b.status) || a.word.localeCompare(b.word));
+
+  $("memory").innerHTML = words.map(w => {
+    const forms = (w.forms || []).map(f => f.form).filter(f => f !== w.word);
+    const ctxs = (w.contexts || []).slice(0, 4).map(c => c.context);
+    const promoted = w.promoted_at ? `promoted ${w.promoted_at.slice(0,10)}` : "";
+    const reinforced = w.last_reinforced_at ? `last seen ${w.last_reinforced_at.slice(0,10)}` : "";
+    return `<div class="word ${esc(w.status)}">
+      <div class="wleft">
+        <div class="wtitle">
+          <span>${esc(w.display || w.word)}</span>
+          <span class="arrow">from</span>
+          <span style="color:var(--muted)">${forms.length ? forms.map(esc).join(", ") : "(canonical only)"}</span>
+          <span class="pill ${esc(w.status)}" style="margin-left:8px">${esc(w.status)}</span>
+        </div>
+        <div class="wmeta">
+          ${w.occurrences} sighting${w.occurrences===1?"":"s"} |
+          ${w.interventions} intervention${w.interventions===1?"":"s"} |
+          ${esc(w.pos)}
+          ${ctxs.length ? ` | ctx: ${ctxs.map(c => `<code>${esc(c)}</code>`).join(" ")}` : ""}
+          ${reinforced ? ` | ${esc(reinforced)}` : ""}
+          ${promoted ? ` | ${esc(promoted)}` : ""}
+        </div>
+      </div>
+      <div class="wactions">
+        ${w.status !== "suppressed"
+          ? `<button class="small ghost" onclick="suppressWord('${esc(w.word)}')">Suppress</button>`
+          : ""}
+        <button class="small danger" onclick="deleteWord('${esc(w.word)}')">Forget</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderEvents(evs) {
+  if (!evs.length) {
+    $("events").innerHTML = `<div class="empty">No events yet.</div>`;
+    return;
+  }
+  $("events").innerHTML = evs.map(e => {
+    const p = e.payload || {};
+    const summary = p.selection && p.replacement ? `${p.selection} -> ${p.replacement}`
+                : p.word ? p.word : JSON.stringify(p).slice(0, 100);
+    return `<div><b>${esc(e.kind)}</b> ${esc(summary)}
+            <span style="float:right">${esc(e.at.slice(11,19))}</span></div>`;
+  }).join("");
+}
+
+refresh();
+</script>
+</body>
+</html>

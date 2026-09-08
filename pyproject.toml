@@ -1,0 +1,29 @@
+[project]
+name = "kivi-word-memory"
+version = "1.0.0"
+description = "Word-level phonetic memory system for the Kivi speech pipeline."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Aditya Kalapala"}]
+keywords = ["speech", "memory", "phonetic", "asr", "kivi", "sarvam"]
+
+# Zero runtime dependencies. Standard library only, by design.
+dependencies = []
+
+[project.optional-dependencies]
+# No external deps for tests either -- they use only unittest + urllib.
+dev = []
+
+[project.urls]
+"Documentation" = "./README.md"
+"Reviewer instructions" = "./RUN.md"
+"Evaluation results" = "./evals/results.md"
+
+[project.scripts]
+kivi-seed  = "app.seed:main"
+kivi-serve = "app.server:main"
+kivi-eval  = "evals.run_eval:run"
+
+[tool.setuptools]
+packages = ["app", "evals"]

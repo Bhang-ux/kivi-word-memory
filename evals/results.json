@@ -1,0 +1,1114 @@
+{
+  "summary": {
+    "product_claim": "After ordinary teaching events, Kivi rewrites the user's words in new transcripts, and deliberately does nothing when its evidence is weak, wrong, or silenced.",
+    "total_cases": 20,
+    "passed": 20,
+    "failed": 0,
+    "pass_rate": 1.0,
+    "useful_interventions": 9,
+    "unnecessary_or_incorrect_interventions": 0,
+    "correct_deliberate_abstentions": 11,
+    "case_wall_ms": 96.716,
+    "case_latency": {
+      "count": 20,
+      "avg_ms": 2.593,
+      "p50_ms": 2.116,
+      "p95_ms": 4.999,
+      "p99_ms": 5.118,
+      "max_ms": 5.118
+    },
+    "db_bytes_after_eval": 394808,
+    "model_usage": "none - phonetic matching is fully local; the memory layer makes no LLM calls",
+    "cost": "0 API calls, 0 tokens, 0 external requests"
+  },
+  "metrics": {
+    "true_positive": 14,
+    "false_positive": 0,
+    "false_negative": 0,
+    "true_negative": 4,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "stress_test": {
+    "sentences": 49,
+    "false_positive_rewrites": 0,
+    "false_positive_rate": 0.0,
+    "hits": [],
+    "latency": {
+      "count": 49,
+      "avg_ms": 1.365,
+      "p50_ms": 1.33,
+      "p95_ms": 1.669,
+      "p99_ms": 2.226,
+      "max_ms": 2.226
+    }
+  },
+  "baseline_comparison": {
+    "description": "Naive baseline: rewrite whenever any taught word has similarity >= 0.72. No candidate lifecycle, no real-word veto, no context boost, no needs_review, no suppression.",
+    "threshold": 0.72,
+    "true_positive": 11,
+    "false_positive": 3,
+    "false_negative": 3,
+    "precision": 0.7857,
+    "recall": 0.7857,
+    "f1": 0.7857,
+    "stress_false_positives": 3,
+    "per_case": [
+      {
+        "case_id": "P1_brief_example",
+        "passed": true,
+        "actual_text": "Ask Aaditya to review the Sarvam Kivi service.",
+        "expected_text": "Ask Aaditya to review the Sarvam Kivi service."
+      },
+      {
+        "case_id": "P2_new_sentence_same_words",
+        "passed": true,
+        "actual_text": "Ping Aaditya about the Sarvam Kivi launch.",
+        "expected_text": "Ping Aaditya about the Sarvam Kivi launch."
+      },
+      {
+        "case_id": "P3_lowercase_input",
+        "passed": true,
+        "actual_text": "can you ask Aaditya to join the Kivi call",
+        "expected_text": "can you ask Aaditya to join the Kivi call"
+      },
+      {
+        "case_id": "P4_paneer_variant",
+        "passed": true,
+        "actual_text": "Order more paneer for the team lunch.",
+        "expected_text": "Order more paneer for the team lunch."
+      },
+      {
+        "case_id": "P5_caps_input",
+        "passed": true,
+        "actual_text": "Review the Aaditya migration before Friday.",
+        "expected_text": "Review the Aaditya migration before Friday."
+      },
+      {
+        "case_id": "P6_casing_preference",
+        "passed": false,
+        "actual_text": "Email the urzoo team about pricing.",
+        "expected_text": "Email the UrZoo team about pricing."
+      },
+      {
+        "case_id": "P7_multiple_taught_words_one_sentence",
+        "passed": true,
+        "actual_text": "Ping Aaditya, tell UrZoo, and send Kivi a note.",
+        "expected_text": "Ping Aaditya, tell UrZoo, and send Kivi a note."
+      },
+      {
+        "case_id": "N1_unrelated_text",
+        "passed": true,
+        "actual_text": "The quick brown fox jumps over the lazy dog.",
+        "expected_text": "The quick brown fox jumps over the lazy dog."
+      },
+      {
+        "case_id": "N2_similar_but_not_taught_name",
+        "passed": true,
+        "actual_text": "Ask Aditi to review the service.",
+        "expected_text": "Ask Aditi to review the service."
+      },
+      {
+        "case_id": "N3_common_word_homophone_risk",
+        "passed": false,
+        "actual_text": "I like Kivi fruit in the morning.",
+        "expected_text": "I like kiwi fruit in the morning."
+      },
+      {
+        "case_id": "N4_candidate_not_yet_confirmed",
+        "passed": true,
+        "actual_text": "Ship the flurbo widget to production.",
+        "expected_text": "Ship the flurbo widget to production."
+      },
+      {
+        "case_id": "N5_replacement_is_common_word_rejected",
+        "passed": true,
+        "actual_text": "Please review the report.",
+        "expected_text": "Please review the report."
+      },
+      {
+        "case_id": "B1_kiwi_with_service_context",
+        "passed": true,
+        "actual_text": "The Kivi service is down.",
+        "expected_text": "The Kivi service is down."
+      },
+      {
+        "case_id": "B2_already_canonical",
+        "passed": true,
+        "actual_text": "Buy paneer at the market.",
+        "expected_text": "Buy paneer at the market."
+      },
+      {
+        "case_id": "B3_short_word_low_sim_no_rewrite",
+        "passed": true,
+        "actual_text": "The ok signal was clear.",
+        "expected_text": "The ok signal was clear."
+      },
+      {
+        "case_id": "L1_candidate_never_rewrites",
+        "passed": true,
+        "actual_text": "Email Ananya about the Mehta invoice.",
+        "expected_text": "Email Ananya about the Mehta invoice."
+      },
+      {
+        "case_id": "L2_confirmed_rewrites",
+        "passed": false,
+        "actual_text": "Email Ananya about the Mehta invoice again.",
+        "expected_text": "Email Ananya about the Mayhta invoice again."
+      },
+      {
+        "case_id": "L3_user_override_pauses",
+        "passed": true,
+        "actual_text": "File the Mehta report under M.",
+        "expected_text": "File the Mehta report under M."
+      },
+      {
+        "case_id": "L4_suppressed_word_never_rewritten",
+        "passed": false,
+        "actual_text": "The Kivi launch went well.",
+        "expected_text": "The Kiwi launch went well."
+      },
+      {
+        "case_id": "L5_delete_removes_intervention",
+        "passed": false,
+        "actual_text": "Order more paneer for the potluck.",
+        "expected_text": "Order more panner for the potluck."
+      }
+    ]
+  },
+  "storage_growth": [
+    {
+      "observations": 1,
+      "db_bytes": 94208
+    },
+    {
+      "observations": 10,
+      "db_bytes": 102400
+    },
+    {
+      "observations": 50,
+      "db_bytes": 180224
+    },
+    {
+      "observations": 200,
+      "db_bytes": 507904
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "P1_brief_example",
+      "group": "positive",
+      "note": "The exact example from the brief, after teaching both words.",
+      "inputs": {
+        "asr": "ask aditya to review the sarvam kiwi service",
+        "formatted": "Ask Aditya to review the Sarvam Kiwi service."
+      },
+      "expected_text": "Ask Aaditya to review the Sarvam Kivi service.",
+      "actual_text": "Ask Aaditya to review the Sarvam Kivi service.",
+      "passed": true,
+      "expected_actions": {
+        "Aditya": "rewrite",
+        "Kiwi": "rewrite"
+      },
+      "actual_actions": {
+        "Kiwi": "rewrite",
+        "Aditya": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 32,
+          "end": 36,
+          "original": "Kiwi",
+          "replacement": "Kivi",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'kivi' (sim 0.82, context +0.15)",
+          "matched_word": "kivi",
+          "similarity": 0.825,
+          "context_support": 0.15
+        },
+        {
+          "start": 4,
+          "end": 10,
+          "original": "Aditya",
+          "replacement": "Aaditya",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'aaditya' (sim 0.90, context +0.05)",
+          "matched_word": "aaditya",
+          "similarity": 0.8999999999999999,
+          "context_support": 0.05
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "aaditya",
+            "display": "Aaditya",
+            "status": "confirmed",
+            "occurrences": 2,
+            "interventions": 1,
+            "forms": [
+              "aaditya",
+              "aditya"
+            ],
+            "contexts": [
+              "deploy",
+              "ping <word>",
+              "sarvam",
+              "slack"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 4.999,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "P2_new_sentence_same_words",
+      "group": "positive",
+      "note": "Memory must generalise beyond the sentence it was taught in.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Ping Aditya about the Sarvam Kiwi launch."
+      },
+      "expected_text": "Ping Aaditya about the Sarvam Kivi launch.",
+      "actual_text": "Ping Aaditya about the Sarvam Kivi launch.",
+      "passed": true,
+      "expected_actions": {
+        "Aditya": "rewrite",
+        "Kiwi": "rewrite"
+      },
+      "actual_actions": {
+        "Kiwi": "rewrite",
+        "Aditya": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 29,
+          "end": 33,
+          "original": "Kiwi",
+          "replacement": "Kivi",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'kivi' (sim 0.82, context +0.10)",
+          "matched_word": "kivi",
+          "similarity": 0.825,
+          "context_support": 0.1
+        },
+        {
+          "start": 5,
+          "end": 11,
+          "original": "Aditya",
+          "replacement": "Aaditya",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'aaditya' (sim 0.90, context +0.05)",
+          "matched_word": "aaditya",
+          "similarity": 0.8999999999999999,
+          "context_support": 0.05
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "aaditya",
+            "display": "Aaditya",
+            "status": "confirmed",
+            "occurrences": 2,
+            "interventions": 2,
+            "forms": [
+              "aaditya",
+              "aditya"
+            ],
+            "contexts": [
+              "deploy",
+              "ping <word>",
+              "sarvam",
+              "slack"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 3.982,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "P3_lowercase_input",
+      "group": "positive",
+      "note": "Proper nouns take their taught Title form regardless of the input's case; taught companion words supply context for kiwi.",
+      "inputs": {
+        "asr": "",
+        "formatted": "can you ask aditya to join the kiwi call"
+      },
+      "expected_text": "can you ask Aaditya to join the Kivi call",
+      "actual_text": "can you ask Aaditya to join the Kivi call",
+      "passed": true,
+      "expected_actions": {
+        "aditya": "rewrite",
+        "kiwi": "rewrite"
+      },
+      "actual_actions": {
+        "kiwi": "rewrite",
+        "aditya": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 31,
+          "end": 35,
+          "original": "kiwi",
+          "replacement": "Kivi",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'kivi' (sim 0.82, context +0.05)",
+          "matched_word": "kivi",
+          "similarity": 0.825,
+          "context_support": 0.05
+        },
+        {
+          "start": 12,
+          "end": 18,
+          "original": "aditya",
+          "replacement": "Aaditya",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'aaditya' (sim 0.90, context +0.00)",
+          "matched_word": "aaditya",
+          "similarity": 0.8999999999999999,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "aaditya",
+            "display": "Aaditya",
+            "status": "confirmed",
+            "occurrences": 2,
+            "interventions": 3,
+            "forms": [
+              "aaditya",
+              "aditya"
+            ],
+            "contexts": [
+              "deploy",
+              "ping <word>",
+              "sarvam",
+              "slack"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 4.108,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "P4_paneer_variant",
+      "group": "positive",
+      "note": "Food romanisation learned from a grocery correction; generalises to a work-lunch context.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Order more panner for the team lunch."
+      },
+      "expected_text": "Order more paneer for the team lunch.",
+      "actual_text": "Order more paneer for the team lunch.",
+      "passed": true,
+      "expected_actions": {
+        "panner": "rewrite"
+      },
+      "actual_actions": {
+        "panner": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 11,
+          "end": 17,
+          "original": "panner",
+          "replacement": "paneer",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'paneer' (sim 0.88, context +0.00)",
+          "matched_word": "paneer",
+          "similarity": 0.8833333333333333,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 7
+      },
+      "latency_ms": 3.084,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "P5_caps_input",
+      "group": "positive",
+      "note": "Proper nouns normalise to the taught Title form; the engine does not mirror SHOUTING because names are Title case in prose.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Review the ADITYA migration before Friday."
+      },
+      "expected_text": "Review the Aaditya migration before Friday.",
+      "actual_text": "Review the Aaditya migration before Friday.",
+      "passed": true,
+      "expected_actions": {
+        "ADITYA": "rewrite"
+      },
+      "actual_actions": {
+        "ADITYA": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 11,
+          "end": 17,
+          "original": "ADITYA",
+          "replacement": "Aaditya",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'aaditya' (sim 0.90, context +0.00)",
+          "matched_word": "aaditya",
+          "similarity": 0.8999999999999999,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "aaditya",
+            "display": "Aaditya",
+            "status": "confirmed",
+            "occurrences": 2,
+            "interventions": 4,
+            "forms": [
+              "aaditya",
+              "aditya"
+            ],
+            "contexts": [
+              "deploy",
+              "ping <word>",
+              "sarvam",
+              "slack"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 2.891,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "P6_casing_preference",
+      "group": "positive",
+      "note": "The user taught exact casing (UrZoo); even lowercase input is rewritten to the taught display form (not flattened).",
+      "inputs": {
+        "asr": "",
+        "formatted": "Email the urzoo team about pricing."
+      },
+      "expected_text": "Email the UrZoo team about pricing.",
+      "actual_text": "Email the UrZoo team about pricing.",
+      "passed": true,
+      "expected_actions": {
+        "urzoo": "rewrite"
+      },
+      "actual_actions": {
+        "urzoo": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 10,
+          "end": 15,
+          "original": "urzoo",
+          "replacement": "UrZoo",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'urzoo' (sim 1.00, context +0.00)",
+          "matched_word": "urzoo",
+          "similarity": 1.0,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "urzoo",
+            "display": "UrZoo",
+            "status": "confirmed",
+            "occurrences": 1,
+            "interventions": 1,
+            "forms": [
+              "urzoo"
+            ],
+            "contexts": [
+              "com",
+              "dot",
+              "veena"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 2.844,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "P7_multiple_taught_words_one_sentence",
+      "group": "positive",
+      "note": "Three independent memories co-fire in one sentence without interfering with each other's spans (right-to-left scan).",
+      "inputs": {
+        "asr": "",
+        "formatted": "Ping Aditya, tell UrZoo, and send Kiwi a note."
+      },
+      "expected_text": "Ping Aaditya, tell UrZoo, and send Kivi a note.",
+      "actual_text": "Ping Aaditya, tell UrZoo, and send Kivi a note.",
+      "passed": true,
+      "expected_actions": {
+        "Aditya": "rewrite",
+        "UrZoo": "rewrite",
+        "Kiwi": "rewrite"
+      },
+      "actual_actions": {
+        "Kiwi": "rewrite",
+        "UrZoo": "rewrite",
+        "Aditya": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 34,
+          "end": 38,
+          "original": "Kiwi",
+          "replacement": "Kivi",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'kivi' (sim 0.82, context +0.05)",
+          "matched_word": "kivi",
+          "similarity": 0.825,
+          "context_support": 0.05
+        },
+        {
+          "start": 18,
+          "end": 23,
+          "original": "UrZoo",
+          "replacement": "UrZoo",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'urzoo' (sim 1.00, context +0.00)",
+          "matched_word": "urzoo",
+          "similarity": 1.0,
+          "context_support": 0.0
+        },
+        {
+          "start": 5,
+          "end": 11,
+          "original": "Aditya",
+          "replacement": "Aaditya",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'aaditya' (sim 0.90, context +0.00)",
+          "matched_word": "aaditya",
+          "similarity": 0.8999999999999999,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "aaditya",
+            "display": "Aaditya",
+            "status": "confirmed",
+            "occurrences": 2,
+            "interventions": 5,
+            "forms": [
+              "aaditya",
+              "aditya"
+            ],
+            "contexts": [
+              "deploy",
+              "ping <word>",
+              "sarvam",
+              "slack"
+            ]
+          },
+          {
+            "word": "urzoo",
+            "display": "UrZoo",
+            "status": "confirmed",
+            "occurrences": 1,
+            "interventions": 2,
+            "forms": [
+              "urzoo"
+            ],
+            "contexts": [
+              "com",
+              "dot",
+              "veena"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 5.118,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "N1_unrelated_text",
+      "group": "negative",
+      "note": "Ordinary English passes through untouched -- no spans resembled any confirmed memory.",
+      "inputs": {
+        "asr": "",
+        "formatted": "The quick brown fox jumps over the lazy dog."
+      },
+      "expected_text": "The quick brown fox jumps over the lazy dog.",
+      "actual_text": "The quick brown fox jumps over the lazy dog.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 7
+      },
+      "latency_ms": 2.116,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "N2_similar_but_not_taught_name",
+      "group": "negative",
+      "note": "'Aditi' resembles 'Aaditya' (sim 0.70) but is a different name; below the strong threshold and no context support, so the engine records an abstention instead of guessing.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Ask Aditi to review the service."
+      },
+      "expected_text": "Ask Aditi to review the service.",
+      "actual_text": "Ask Aditi to review the service.",
+      "passed": true,
+      "expected_actions": {
+        "Aditi": "abstain"
+      },
+      "actual_actions": {
+        "Aditi": "abstain"
+      },
+      "decisions": [
+        {
+          "start": 4,
+          "end": 9,
+          "original": "Aditi",
+          "replacement": "aaditya",
+          "action": "abstain",
+          "reason": "similarity 0.70 below strong threshold 0.72 and context support 0.00 insufficient",
+          "matched_word": "aaditya",
+          "similarity": 0.7,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 7
+      },
+      "latency_ms": 1.917,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "N3_common_word_homophone_risk",
+      "group": "negative",
+      "note": "'kiwi' here IS the fruit. Rewriting a dictionary word requires supporting context; none appears, so it abstains.",
+      "inputs": {
+        "asr": "i like kiwi fruit in the morning",
+        "formatted": "I like kiwi fruit in the morning."
+      },
+      "expected_text": "I like kiwi fruit in the morning.",
+      "actual_text": "I like kiwi fruit in the morning.",
+      "passed": true,
+      "expected_actions": {
+        "kiwi": "abstain"
+      },
+      "actual_actions": {
+        "kiwi": "abstain"
+      },
+      "decisions": [
+        {
+          "start": 7,
+          "end": 11,
+          "original": "kiwi",
+          "replacement": "kivi",
+          "action": "abstain",
+          "reason": "real-word risk: 'kiwi' is a common word; rewriting to 'kivi' requires supporting context, which is absent",
+          "matched_word": "kivi",
+          "similarity": 0.825,
+          "context_support": 0.0
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "aaditya",
+            "display": "Aaditya",
+            "status": "confirmed",
+            "occurrences": 2,
+            "interventions": 5,
+            "forms": [
+              "aaditya",
+              "aditya"
+            ],
+            "contexts": [
+              "deploy",
+              "ping <word>",
+              "sarvam",
+              "slack"
+            ]
+          },
+          {
+            "word": "kivi",
+            "display": "Kivi",
+            "status": "confirmed",
+            "occurrences": 1,
+            "interventions": 4,
+            "forms": [
+              "kivi",
+              "kiwi"
+            ],
+            "contexts": [
+              "<word> service",
+              "aditya",
+              "sarvam"
+            ]
+          }
+        ],
+        "total_events": 7
+      },
+      "latency_ms": 1.751,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "N4_candidate_not_yet_confirmed",
+      "group": "negative",
+      "note": "Runs against a candidate-only word; candidates never rewrite.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Ship the flurbo widget to production."
+      },
+      "expected_text": "Ship the flurbo widget to production.",
+      "actual_text": "Ship the flurbo widget to production.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "flurbo",
+            "display": "flurbo",
+            "status": "candidate",
+            "occurrences": 1,
+            "interventions": 0,
+            "forms": [
+              "flurbo"
+            ],
+            "contexts": []
+          }
+        ],
+        "total_events": 8
+      },
+      "latency_ms": 1.996,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "N5_replacement_is_common_word_rejected",
+      "group": "negative",
+      "note": "A prior correction attempt tried to teach 'review' -> 'the' and was refused at learn time; nothing in memory means nothing happens here either.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Please review the report."
+      },
+      "expected_text": "Please review the report.",
+      "actual_text": "Please review the report.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 8
+      },
+      "latency_ms": 1.766,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "B1_kiwi_with_service_context",
+      "group": "boundary",
+      "note": "Product-sense context (stored template '<word> service') pushes the match over the intervention threshold.",
+      "inputs": {
+        "asr": "",
+        "formatted": "The kiwi service is down."
+      },
+      "expected_text": "The Kivi service is down.",
+      "actual_text": "The Kivi service is down.",
+      "passed": true,
+      "expected_actions": {
+        "kiwi": "rewrite"
+      },
+      "actual_actions": {
+        "kiwi": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 4,
+          "end": 8,
+          "original": "kiwi",
+          "replacement": "Kivi",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'kivi' (sim 0.82, context +0.10)",
+          "matched_word": "kivi",
+          "similarity": 0.825,
+          "context_support": 0.1
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 8
+      },
+      "latency_ms": 2.546,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "B2_already_canonical",
+      "group": "boundary",
+      "note": "Already-canonical spelling is left alone (no churn).",
+      "inputs": {
+        "asr": "",
+        "formatted": "Buy paneer at the market."
+      },
+      "expected_text": "Buy paneer at the market.",
+      "actual_text": "Buy paneer at the market.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "paneer",
+            "display": "paneer",
+            "status": "confirmed",
+            "occurrences": 1,
+            "interventions": 1,
+            "forms": [
+              "paneer",
+              "panner"
+            ],
+            "contexts": [
+              "add",
+              "grocery",
+              "list"
+            ]
+          }
+        ],
+        "total_events": 8
+      },
+      "latency_ms": 1.684,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "B3_short_word_low_sim_no_rewrite",
+      "group": "boundary",
+      "note": "Very short words never cross the similarity threshold to any taught word; the abstention isn't even recorded because no candidate match existed.",
+      "inputs": {
+        "asr": "",
+        "formatted": "The ok signal was clear."
+      },
+      "expected_text": "The ok signal was clear.",
+      "actual_text": "The ok signal was clear.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 8
+      },
+      "latency_ms": 1.655,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "L1_candidate_never_rewrites",
+      "group": "lifecycle",
+      "note": "First sighting of Mehta->Mayhta is only a candidate (weight 1): it must not rewrite yet.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Email Ananya about the Mehta invoice."
+      },
+      "expected_text": "Email Ananya about the Mehta invoice.",
+      "actual_text": "Email Ananya about the Mehta invoice.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 9
+      },
+      "latency_ms": 2.026,
+      "db_bytes": 94208,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "L2_confirmed_rewrites",
+      "group": "lifecycle",
+      "note": "After a confirming second sighting, the word rewrites new sentences.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Email Ananya about the Mehta invoice again."
+      },
+      "expected_text": "Email Ananya about the Mayhta invoice again.",
+      "actual_text": "Email Ananya about the Mayhta invoice again.",
+      "passed": true,
+      "expected_actions": {
+        "Mehta": "rewrite"
+      },
+      "actual_actions": {
+        "Mehta": "rewrite"
+      },
+      "decisions": [
+        {
+          "start": 23,
+          "end": 28,
+          "original": "Mehta",
+          "replacement": "Mayhta",
+          "action": "rewrite",
+          "reason": "phonetic match to confirmed word 'mayhta' (sim 0.77, context +0.10)",
+          "matched_word": "mayhta",
+          "similarity": 0.7666666666666666,
+          "context_support": 0.1
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 11
+      },
+      "latency_ms": 3.073,
+      "db_bytes": 180568,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "L3_user_override_pauses",
+      "group": "lifecycle",
+      "note": "The user re-edited our rewrite to a third spelling; the word is flagged needs_review and rewrites pause for it and all its forms until re-taught.",
+      "inputs": {
+        "asr": "",
+        "formatted": "File the Mehta report under M."
+      },
+      "expected_text": "File the Mehta report under M.",
+      "actual_text": "File the Mehta report under M.",
+      "passed": true,
+      "expected_actions": {
+        "Mehta": "abstain"
+      },
+      "actual_actions": {
+        "Mehta": "abstain"
+      },
+      "decisions": [
+        {
+          "start": 9,
+          "end": 14,
+          "original": "Mehta",
+          "replacement": null,
+          "action": "abstain",
+          "reason": "word is flagged needs_review after user override; rewriting paused",
+          "matched_word": null,
+          "similarity": null,
+          "context_support": null
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [
+          {
+            "word": "mayhta",
+            "display": "Mayhta",
+            "status": "needs_review",
+            "occurrences": 2,
+            "interventions": 1,
+            "forms": [
+              "mayhta",
+              "mehta"
+            ],
+            "contexts": [
+              "ananya",
+              "call <word>",
+              "invoice"
+            ]
+          }
+        ],
+        "total_events": 12
+      },
+      "latency_ms": 1.555,
+      "db_bytes": 205288,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "L4_suppressed_word_never_rewritten",
+      "group": "lifecycle",
+      "note": "After suppressing 'kivi' from the memory UI, the word (and its forms) is never rewritten again; the abstention is still logged for inspectability.",
+      "inputs": {
+        "asr": "",
+        "formatted": "The Kiwi launch went well."
+      },
+      "expected_text": "The Kiwi launch went well.",
+      "actual_text": "The Kiwi launch went well.",
+      "passed": true,
+      "expected_actions": {
+        "Kiwi": "abstain"
+      },
+      "actual_actions": {
+        "Kiwi": "abstain"
+      },
+      "decisions": [
+        {
+          "start": 4,
+          "end": 8,
+          "original": "Kiwi",
+          "replacement": null,
+          "action": "abstain",
+          "reason": "word is suppressed by user; never rewritten",
+          "matched_word": null,
+          "similarity": null,
+          "context_support": null
+        }
+      ],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 14
+      },
+      "latency_ms": 1.233,
+      "db_bytes": 312408,
+      "failure_reason": ""
+    },
+    {
+      "case_id": "L5_delete_removes_intervention",
+      "group": "lifecycle",
+      "note": "After forgetting 'paneer' entirely, 'panner' is no longer recognised as anything the system knows -- the engine has nothing to abstain about.",
+      "inputs": {
+        "asr": "",
+        "formatted": "Order more panner for the potluck."
+      },
+      "expected_text": "Order more panner for the potluck.",
+      "actual_text": "Order more panner for the potluck.",
+      "passed": true,
+      "expected_actions": {},
+      "actual_actions": {},
+      "decisions": [],
+      "memory_state_digest": {
+        "relevant_words": [],
+        "total_events": 15
+      },
+      "latency_ms": 1.523,
+      "db_bytes": 394808,
+      "failure_reason": ""
+    }
+  ]
+}

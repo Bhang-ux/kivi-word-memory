@@ -1,0 +1,21 @@
+# -- Python bytecode / caches ------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# -- Runtime DB files (rebuilt by app.seed) ----------------------------------
+db/*.db
+db/*.db-wal
+db/*.db-shm
+
+# -- Local environment overrides ---------------------------------------------
+.env
+
+# -- Editor / OS scratch -----------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
